@@ -1139,23 +1139,40 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
         snprintf(temp, sizeof(temp), "Custom %d button", i + 1);
         addCustomButton(g_Config.CustomButton[i], temp, config.touchCustom[i]);
     }
+    
+   // On-screen Layout Toggle Button
+	if (activeSwitchKey.show) {
+		static bool dummySwitchVal = false;
+		auto *switchBtn = addBoolButton(&dummySwitchVal, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_GEAR"), activeSwitchKey);
+		if (switchBtn) {
+			switchBtn->OnChange.Add([](UI::EventParams &e) {
+				if (e.a) {
+					g_Config.iTouchLayout = (g_Config.iTouchLayout == 1) ? 0 : 1;
+					NativeMessageReceived("touch_controls_changed", "");
+				}
+				return UI::EVENT_DONE;
+			});
+		}
+	}
 
-    // On-screen Layout Toggle Button
-    //if (activeSwitchKey.show) {
-       // addBoolButton(nullptr, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_CONFIG"), activeSwitchKey);
-    //}
-
-    // Add the two gesture zones.
-    for (int i = 0; i < 2; i++) {
-        if (g_Config.gestureControls[i].bGestureControlEnabled || g_Config.gestureControls[i].bAnalogGesture) {
-            Add(new GestureGamepad(controlMapper, i, new AnchorLayoutParams(FILL_PARENT, FILL_PARENT, 0.0f, 0.0f, 0.0f, 0.0f)));
-        }
-    }
+	// Add the two gesture zones.
+	for (int i = 0; i < 2; i++) {
+		if (g_Config.gestureControls[i].bGestureControlEnabled || g_Config.gestureControls[i].bAnalogGesture) {
+			Add(new GestureGamepad(controlMapper, i, new AnchorLayoutParams(FILL_PARENT, FILL_PARENT, 0.0f, 0.0f, 0.0f, 0.0f)));
+		}
+	}
 }
 
 void GamepadEmuView::Update() {
 	AnchorLayout::Update();
 	GamepadUpdateOpacity();
+
+	static int lastKnownLayout = g_Config.iTouchLayout;
+	if (lastKnownLayout != g_Config.iTouchLayout) {
+		lastKnownLayout = g_Config.iTouchLayout;
+		NativeMessageReceived("touch_controls_changed", "");
+		return;
+	}
 
 	bool anyDown = false;
 	for (auto view : views_) {
