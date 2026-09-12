@@ -34,7 +34,10 @@
 #include "Core/ControlMapper.h"
 #include "UI/GamepadEmu.h"
 
-extern void NativeMessageReceived(const char *message, const char *value);
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((weak))
+#endif
+void NativeMessageReceived(const char *message, const char *value) {}
 
 const float TOUCH_SCALE_FACTOR = 1.5f;
 
