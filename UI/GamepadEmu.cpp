@@ -963,7 +963,21 @@ void InitPadLayout(TouchControlConfig *config, DeviceOrientation orientation, fl
 	int r_key_X = xres - 60 * scale;
 	int r_key_Y = l_key_Y;
 	initTouchPos(&config->touchRKey, r_key_X, r_key_Y);
+    // Initialize Layout 2 defaults
+	initTouchPos(&config->touchPauseKey2, Pause_button_center_X, Pause_button_center_Y, 0.8f);
+	initTouchPos(&config->touchActionButtonCenter2, Action_button_center_X, Action_button_center_Y);
+	initTouchPos(&config->touchDpad2, D_pad_X, D_pad_Y);
+	initTouchPos(&config->touchAnalogStick2, analog_stick_X, analog_stick_Y);
+	initTouchPos(&config->touchRightAnalogStick2, right_analog_stick_X, right_analog_stick_Y);
+	initTouchPos(&config->touchStartKey2, start_key_X, start_key_Y);
+	initTouchPos(&config->touchSelectKey2, select_key_X, select_key_Y);
+	initTouchPos(&config->touchFastForwardKey2, fast_forward_key_X, fast_forward_key_Y);
+	initTouchPos(&config->touchLKey2, l_key_X, l_key_Y);
+	initTouchPos(&config->touchRKey2, r_key_X, r_key_Y);
 
+	// Layout toggle button defaults
+	initTouchPos(&config->touchSwitchLayoutKey, Pause_button_center_X + 120.0f * scale, Pause_button_center_Y, 0.8f);
+	initTouchPos(&config->touchSwitchLayoutKey2, Pause_button_center_X + 120.0f * scale, Pause_button_center_Y, 0.8f);
 	struct { float x; float y; } customButtonPositions[10] = {
 		{ 1.2f, 0.5f },
 		{ 2.2f, 0.5f },
@@ -1000,6 +1014,19 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 	}
 
 	using namespace UI;
+
+	const bool isLayout2 = (config.iTouchLayout == 1);
+    const ConfigTouchPos &activePauseKey = isLayout2 ? config.touchPauseKey2 : config.touchPauseKey;
+    const ConfigTouchPos &activeActionButtonCenter = isLayout2 ? config.touchActionButtonCenter2 : config.touchActionButtonCenter;
+    const ConfigTouchPos &activeStartKey = isLayout2 ? config.touchStartKey2 : config.touchStartKey;
+    const ConfigTouchPos &activeSelectKey = isLayout2 ? config.touchSelectKey2 : config.touchSelectKey;
+    const ConfigTouchPos &activeFastForwardKey = isLayout2 ? config.touchFastForwardKey2 : config.touchFastForwardKey;
+    const ConfigTouchPos &activeLKey = isLayout2 ? config.touchLKey2 : config.touchLKey;
+    const ConfigTouchPos &activeRKey = isLayout2 ? config.touchRKey2 : config.touchRKey;
+    const ConfigTouchPos &activeDpad = isLayout2 ? config.touchDpad2 : config.touchDpad;
+    const ConfigTouchPos &activeAnalogStick = isLayout2 ? config.touchAnalogStick2 : config.touchAnalogStick;
+    const ConfigTouchPos &activeRightAnalogStick = isLayout2 ? config.touchRightAnalogStick2 : config.touchRightAnalogStick;
+    const ConfigTouchPos &activeSwitchKey = isLayout2 ? config.touchSwitchLayoutKey2 : config.touchSwitchLayoutKey;
 
 	struct ButtonOffset {
 		float x;
@@ -1054,74 +1081,83 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 		return nullptr;
 	};
 
-	if (config.touchPauseKey.show) {
-		auto button = addBoolButton(pause, "Pause button", roundImage, ImageID("I_ROUND"), ImageID("I_HAMBURGER"), config.touchPauseKey);
-		if (button) {
-			// The user is not allowed to hide this completely on some platforms - it must be findable.
-			button->SetMinimumAlpha(0.1f);
-		}
-	}
+	if (activePauseKey.show) {
+        auto button = addBoolButton(pause, "Pause button", roundImage, ImageID("I_ROUND"), ImageID("I_HAMBURGER"), activePauseKey);
+        if (button) {
+            // The user is not allowed to hide this completely on some platforms - it must be findable.
+            button->SetMinimumAlpha(0.1f);
+        }
+    }
 
-	// touchActionButtonCenter.show will always be true, since that's the default.
-	if (config.bShowTouchCircle)
-		addPSPButton(CTRL_CIRCLE, "Circle button", roundImage, ImageID("I_ROUND"), ImageID("I_CIRCLE"), config.touchActionButtonCenter, circleOffset);
-	if (config.bShowTouchCross)
-		addPSPButton(CTRL_CROSS, "Cross button", roundImage, ImageID("I_ROUND"), ImageID("I_CROSS"), config.touchActionButtonCenter, crossOffset);
-	if (config.bShowTouchTriangle)
-		addPSPButton(CTRL_TRIANGLE, "Triangle button", roundImage, ImageID("I_ROUND"), ImageID("I_TRIANGLE"), config.touchActionButtonCenter, triangleOffset);
-	if (config.bShowTouchSquare)
-		addPSPButton(CTRL_SQUARE, "Square button", roundImage, ImageID("I_ROUND"), ImageID("I_SQUARE"), config.touchActionButtonCenter, squareOffset);
+    // touchActionButtonCenter.show will always be true, since that's the default.
+    if (config.bShowTouchCircle)
+        addPSPButton(CTRL_CIRCLE, "Circle button", roundImage, ImageID("I_ROUND"), ImageID("I_CIRCLE"), activeActionButtonCenter, circleOffset);
+    if (config.bShowTouchCross)
+        addPSPButton(CTRL_CROSS, "Cross button", roundImage, ImageID("I_ROUND"), ImageID("I_CROSS"), activeActionButtonCenter, crossOffset);
+    if (config.bShowTouchTriangle)
+        addPSPButton(CTRL_TRIANGLE, "Triangle button", roundImage, ImageID("I_ROUND"), ImageID("I_TRIANGLE"), activeActionButtonCenter, triangleOffset);
+    if (config.bShowTouchSquare)
+        addPSPButton(CTRL_SQUARE, "Square button", roundImage, ImageID("I_ROUND"), ImageID("I_SQUARE"), activeActionButtonCenter, squareOffset);
 
-	addPSPButton(CTRL_START, "Start button", rectImage, ImageID("I_RECT"), ImageID("I_START"), config.touchStartKey);
-	addPSPButton(CTRL_SELECT, "Select button", rectImage, ImageID("I_RECT"), ImageID("I_SELECT"), config.touchSelectKey);
+    addPSPButton(CTRL_START, "Start button", rectImage, ImageID("I_RECT"), ImageID("I_START"), activeStartKey);
+    addPSPButton(CTRL_SELECT, "Select button", rectImage, ImageID("I_RECT"), ImageID("I_SELECT"), activeSelectKey);
 
-	BoolButton *fastForward = addBoolButton(&PSP_CoreParameter().fastForward, "Fast-forward button", rectImage, ImageID("I_RECT"), ImageID("I_FAST_FORWARD_LINE"), config.touchFastForwardKey);
-	if (fastForward) {
-		fastForward->OnChange.Add([](UI::EventParams &e) {
-			if (e.a && coreState == CORE_STEPPING_CPU) {
-				Core_Resume();
-			}
-		});
-	}
+    BoolButton *fastForward = addBoolButton(&PSP_CoreParameter().fastForward, "Fast-forward button", rectImage, ImageID("I_RECT"), ImageID("I_FAST_FORWARD_LINE"), activeFastForwardKey);
+    if (fastForward) {
+        fastForward->OnChange.Add([](UI::EventParams &e) {
+            if (e.a && coreState == CORE_STEPPING_CPU) {
+                Core_Resume();
+            }
+        });
+    }
 
-	addPSPButton(CTRL_LTRIGGER, "Left shoulder button", shoulderImage, ImageID("I_SHOULDER"), ImageID("I_L"), config.touchLKey);
-	PSPButton *rTrigger = addPSPButton(CTRL_RTRIGGER, "Right shoulder button", shoulderImage, ImageID("I_SHOULDER"), ImageID("I_R"), config.touchRKey);
-	if (rTrigger)
-		rTrigger->FlipImageH(true);
+    addPSPButton(CTRL_LTRIGGER, "Left shoulder button", shoulderImage, ImageID("I_SHOULDER"), ImageID("I_L"), activeLKey);
+    PSPButton *rTrigger = addPSPButton(CTRL_RTRIGGER, "Right shoulder button", shoulderImage, ImageID("I_SHOULDER"), ImageID("I_R"), activeRKey);
+    if (rTrigger)
+        rTrigger->FlipImageH(true);
 
-	if (config.touchDpad.show) {
-		const ImageID dirImage = g_Config.iTouchButtonStyle ? ImageID("I_DIR_LINE") : ImageID("I_DIR");
-		Add(new PSPDpad(dirImage, "D-pad", ImageID("I_DIR"), ImageID("I_ARROW"), config.touchDpad.scale, config.fDpadSpacing, buttonLayoutParams(config.touchDpad)));
-	}
+    if (activeDpad.show) {
+        const ImageID dirImage = g_Config.iTouchButtonStyle ? ImageID("I_DIR_LINE") : ImageID("I_DIR");
+        Add(new PSPDpad(dirImage, "D-pad", ImageID("I_DIR"), ImageID("I_ARROW"), activeDpad.scale, config.fDpadSpacing, buttonLayoutParams(activeDpad)));
+    }
 
-	if (config.touchAnalogStick.show)
-		Add(new PSPStick(stickBg, "Left analog stick", stickImage, ImageID("I_STICK"), 0, config.touchAnalogStick.scale, buttonLayoutParams(config.touchAnalogStick)));
+    if (activeAnalogStick.show)
+        Add(new PSPStick(stickBg, "Left analog stick", stickImage, ImageID("I_STICK"), 0, activeAnalogStick.scale, buttonLayoutParams(activeAnalogStick)));
 
-	if (config.touchRightAnalogStick.show) {
-		if (g_Config.bRightAnalogCustom)
-			Add(new PSPCustomStick(stickBg, "Right analog stick", stickImage, ImageID("I_STICK"), 1, config.touchRightAnalogStick.scale, buttonLayoutParams(config.touchRightAnalogStick)));
-		else
-			Add(new PSPStick(stickBg, "Right analog stick", stickImage, ImageID("I_STICK"), 1, config.touchRightAnalogStick.scale, buttonLayoutParams(config.touchRightAnalogStick)));
-	}
+    if (activeRightAnalogStick.show) {
+        if (g_Config.bRightAnalogCustom)
+            Add(new PSPCustomStick(stickBg, "Right analog stick", stickImage, ImageID("I_STICK"), 1, activeRightAnalogStick.scale, buttonLayoutParams(activeRightAnalogStick)));
+        else
+            Add(new PSPStick(stickBg, "Right analog stick", stickImage, ImageID("I_STICK"), 1, activeRightAnalogStick.scale, buttonLayoutParams(activeRightAnalogStick)));
+    }
 
-	// Sanitize custom button images, while adding them.
-	for (int i = 0; i < TouchControlConfig::CUSTOM_BUTTON_COUNT; i++) {
-		CustomKeyData::Sanitize(g_Config.CustomButton[i]);
+    // Sanitize custom button images, while adding them.
+    for (int i = 0; i < TouchControlConfig::CUSTOM_BUTTON_COUNT; i++) {
+        CustomKeyData::Sanitize(g_Config.CustomButton[i]);
 
-		char temp[64];
-		snprintf(temp, sizeof(temp), "Custom %d button", i + 1);
-		addCustomButton(g_Config.CustomButton[i], temp, config.touchCustom[i]);
-	}
+        char temp[64];
+        snprintf(temp, sizeof(temp), "Custom %d button", i + 1);
+        addCustomButton(g_Config.CustomButton[i], temp, config.touchCustom[i]);
+    }
 
-	// Add the two gesture zones.
-	for (int i = 0; i < 2; i++) {
-		if (g_Config.gestureControls[i].bGestureControlEnabled || g_Config.gestureControls[i].bAnalogGesture) {
-			// We have them both cover the whole surface, then limit in the touch handler.
-			// This is because there's no easy way to do "half the screen" in AnchorLayout.
-			// We can do more complex layout combinations, but meh.
-			Add(new GestureGamepad(controlMapper, i, new AnchorLayoutParams(FILL_PARENT, FILL_PARENT, 0.0f, 0.0f, 0.0f, 0.0f)));
-		}
-	}
+    // On-screen Layout Toggle Button
+    if (activeSwitchKey.show) {
+        BoolButton *layoutSwitchBtn = addBoolButton(nullptr, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_CONFIG"), activeSwitchKey);
+        if (layoutSwitchBtn) {
+            layoutSwitchBtn->OnClick.Add([](UI::EventParams &e) -> UI::EventReturn {
+                g_Config.touchControlsLandscape.iTouchLayout = (g_Config.touchControlsLandscape.iTouchLayout == 0) ? 1 : 0;
+                NativeMessageReceived("recreateviews", "");
+                return UI::EVENT_DONE;
+            });
+        }
+    }
+
+    // Add the two gesture zones.
+    for (int i = 0; i < 2; i++) {
+        if (g_Config.gestureControls[i].bGestureControlEnabled || g_Config.gestureControls[i].bAnalogGesture) {
+            Add(new GestureGamepad(controlMapper, i, new AnchorLayoutParams(FILL_PARENT, FILL_PARENT, 0.0f, 0.0f, 0.0f, 0.0f)));
+        }
+    }
 }
 
 void GamepadEmuView::Update() {
