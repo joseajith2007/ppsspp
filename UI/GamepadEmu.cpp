@@ -969,9 +969,9 @@ void InitPadLayout(TouchControlConfig *config, DeviceOrientation orientation, fl
 	initTouchPos(&config->touchDpad2, D_pad_X, D_pad_Y);
 	initTouchPos(&config->touchAnalogStick2, analog_stick_X, analog_stick_Y);
 	initTouchPos(&config->touchRightAnalogStick2, right_analog_stick_X, right_analog_stick_Y);
-	initTouchPos(&config->touchStartKey2, start_key_X, start_key_Y);
-	initTouchPos(&config->touchSelectKey2, select_key_X, select_key_Y);
-	initTouchPos(&config->touchFastForwardKey2, fast_forward_key_X, fast_forward_key_Y);
+	config->touchStartKey2 = config->touchStartKey;
+	config->touchSelectKey2 = config->touchSelectKey;
+	config->touchFastForwardKey2 = config->touchFastForwardKey;
 	initTouchPos(&config->touchLKey2, l_key_X, l_key_Y);
 	initTouchPos(&config->touchRKey2, r_key_X, r_key_Y);
 
@@ -1142,14 +1142,7 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 
     // On-screen Layout Toggle Button
     if (activeSwitchKey.show) {
-        BoolButton *layoutSwitchBtn = addBoolButton(nullptr, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_CONFIG"), activeSwitchKey);
-        if (layoutSwitchBtn) {
-            layoutSwitchBtn->OnClick.Add([](UI::EventParams &e) -> UI::EventReturn {
-                g_Config.touchControlsLandscape.iTouchLayout = (g_Config.touchControlsLandscape.iTouchLayout == 0) ? 1 : 0;
-                NativeMessageReceived("recreateviews", "");
-                return UI::EVENT_DONE;
-            });
-        }
+        addBoolButton(nullptr, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_CONFIG"), activeSwitchKey);
     }
 
     // Add the two gesture zones.
