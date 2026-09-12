@@ -477,9 +477,21 @@ void ControlLayoutView::CreateViews() {
 
 	// Create all the subviews.
 	TouchControlConfig &touch = g_Config.GetTouchControlsConfig(deviceOrientation_);
+	const bool isLayout2 = (touch.iTouchLayout == 1);
+    ConfigTouchPos &activePauseKey = isLayout2 ? touch.touchPauseKey2 : touch.touchPauseKey;
+    ConfigTouchPos &activeActionButtonCenter = isLayout2 ? touch.touchActionButtonCenter2 : touch.touchActionButtonCenter;
+    ConfigTouchPos &activeStartKey = isLayout2 ? touch.touchStartKey2 : touch.touchStartKey;
+    ConfigTouchPos &activeSelectKey = isLayout2 ? touch.touchSelectKey2 : touch.touchSelectKey;
+    ConfigTouchPos &activeFastForwardKey = isLayout2 ? touch.touchFastForwardKey2 : touch.touchFastForwardKey;
+    ConfigTouchPos &activeLKey = isLayout2 ? touch.touchLKey2 : touch.touchLKey;
+    ConfigTouchPos &activeRKey = isLayout2 ? touch.touchRKey2 : touch.touchRKey;
+    ConfigTouchPos &activeDpad = isLayout2 ? touch.touchDpad2 : touch.touchDpad;
+    ConfigTouchPos &activeAnalogStick = isLayout2 ? touch.touchAnalogStick2 : touch.touchAnalogStick;
+    ConfigTouchPos &activeRightAnalogStick = isLayout2 ? touch.touchRightAnalogStick2 : touch.touchRightAnalogStick;
+    ConfigTouchPos &activeSwitchKey = isLayout2 ? touch.touchSwitchLayoutKey2 : touch.touchSwitchLayoutKey;
 
 	if (touch.bShowTouchCircle || touch.bShowTouchCross || touch.bShowTouchTriangle || touch.bShowTouchSquare) {
-		PSPActionButtons *actionButtons = new PSPActionButtons(touch.touchActionButtonCenter, "Action buttons", touch.fActionButtonSpacing, bounds);
+		PSPActionButtons *actionButtons = new PSPActionButtons(activeActionButtonCenter, "Action buttons", touch.fActionButtonSpacing, bounds);
 		actionButtons->setCircleVisibility(touch.bShowTouchCircle);
 		actionButtons->setCrossVisibility(touch.bShowTouchCross);
 		actionButtons->setTriangleVisibility(touch.bShowTouchTriangle);
@@ -502,27 +514,30 @@ void ControlLayoutView::CreateViews() {
 		return b;
 	};
 
-	if (touch.touchDpad.show) {
-		controls_.push_back(new PSPDPadButtons(touch.touchDpad, "D-pad", touch.fDpadSpacing, bounds));
+	if (activeDpad.show) {
+		controls_.push_back(new PSPDPadButtons(activeDpad, "D-pad", touch.fDpadSpacing, bounds));
 	}
 
-	addDragDropButton(touch.touchPauseKey, "Pause button", roundImage, ImageID("I_HAMBURGER"));
+	addDragDropButton(activePauseKey, "Pause button", roundImage, ImageID("I_HAMBURGER"));
 
-	addDragDropButton(touch.touchSelectKey, "Select button", rectImage, ImageID("I_SELECT"));
-	addDragDropButton(touch.touchStartKey, "Start button", rectImage, ImageID("I_START"));
+	addDragDropButton(activeSelectKey, "Select button", rectImage, ImageID("I_SELECT"));
+	addDragDropButton(activeStartKey, "Start button", rectImage, ImageID("I_START"));
 
-	addDragDropButton(touch.touchFastForwardKey, "Fast-forward button", rectImage, ImageID("I_FAST_FORWARD_LINE"));
-	addDragDropButton(touch.touchLKey, "Left shoulder button", shoulderImage, ImageID("I_L"));
-	if (auto *rbutton = addDragDropButton(touch.touchRKey, "Right shoulder button", shoulderImage, ImageID("I_R"))) {
+	addDragDropButton(activeFastForwardKey, "Fast-forward button", rectImage, ImageID("I_FAST_FORWARD_LINE"));
+	addDragDropButton(activeLKey, "Left shoulder button", shoulderImage, ImageID("I_L"));
+	if (auto *rbutton = addDragDropButton(activeRKey, "Right shoulder button", shoulderImage, ImageID("I_R"))) {
 		rbutton->FlipImageH(true);
 	}
 
-	if (touch.touchAnalogStick.show) {
-		controls_.push_back(new PSPStickDragDrop(touch.touchAnalogStick, "Left analog stick", stickBg, stickImage, bounds, touch.fLeftStickHeadScale));
+	if (activeAnalogStick.show) {
+		controls_.push_back(new PSPStickDragDrop(activeAnalogStick, "Left analog stick", stickBg, stickImage, bounds, touch.fLeftStickHeadScale));
 	}
-	if (touch.touchRightAnalogStick.show) {
-		controls_.push_back(new PSPStickDragDrop(touch.touchRightAnalogStick, "Right analog stick", stickBg, stickImage, bounds, touch.fRightStickHeadScale));
+	if (activeRightAnalogStick.show) {
+		controls_.push_back(new PSPStickDragDrop(activeRightAnalogStick, "Right analog stick", stickBg, stickImage, bounds, touch.fRightStickHeadScale));
 	}
+
+	// Editable Layout Switch Button
+	addDragDropButton(activeSwitchKey, "Switch Layout", roundImage, ImageID("I_CONFIG"));
 
 	auto addDragCustomKey = [&](ConfigTouchPos &pos, const char *key, const ConfigCustomButton& cfg) {
 		DragDropButton *b = nullptr;
