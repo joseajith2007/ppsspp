@@ -21,7 +21,6 @@
 #include "Common/Data/Text/I18n.h"
 #include "Common/System/Display.h"
 #include "Common/System/System.h"
-#include "Common/System/NativeApp.h"
 #include "Common/Render/TextureAtlas.h"
 #include "Common/Math/math_util.h"
 #include "Common/UI/Context.h"
@@ -34,6 +33,8 @@
 #include "Core/HLE/sceCtrl.h"
 #include "Core/ControlMapper.h"
 #include "UI/GamepadEmu.h"
+
+extern void NativeMessageReceived(const char *message, const char *value);
 
 const float TOUCH_SCALE_FACTOR = 1.5f;
 
