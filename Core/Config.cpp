@@ -943,6 +943,21 @@ static const ConfigSetting touchControlSettings[] = {
 	ConfigSetting("LeftStickHeadScale", SETTING(g_Config.touchControlsLandscape, fLeftStickHeadScale), CfgFlag::PER_GAME),
 	ConfigSetting("RightStickHeadScale", SETTING(g_Config.touchControlsLandscape, fRightStickHeadScale), CfgFlag::PER_GAME),
 	ConfigSetting("HideStickBackground", SETTING(g_Config.touchControlsLandscape, bHideStickBackground), CfgFlag::PER_GAME),
+	// Layout 2 Touch Positions
+    ConfigSetting("ActionButtonCenter2X", "ActionButtonCenter2Y", "ActionButtonCenter2Scale", nullptr, SETTING(g_Config.touchControlsLandscape, touchActionButtonCenter2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("DPad2X", "DPad2Y", "DPad2Scale", "ShowTouchDpad2", SETTING(g_Config.touchControlsLandscape, touchDpad2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("StartKey2X", "StartKey2Y", "StartKey2Scale", "ShowTouchStart2", SETTING(g_Config.touchControlsLandscape, touchStartKey2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("SelectKey2X", "SelectKey2Y", "SelectKey2Scale", "ShowTouchSelect2", SETTING(g_Config.touchControlsLandscape, touchSelectKey2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("UnthrottleKey2X", "UnthrottleKey2Y", "UnthrottleKey2Scale", "ShowTouchUnthrottle2", SETTING(g_Config.touchControlsLandscape, touchFastForwardKey2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("LKey2X", "LKey2Y", "LKey2Scale", "ShowTouchLTrigger2", SETTING(g_Config.touchControlsLandscape, touchLKey2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("RKey2X", "RKey2Y", "RKey2Scale", "ShowTouchRTrigger2", SETTING(g_Config.touchControlsLandscape, touchRKey2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("PauseKey2X", "PauseKey2Y", "PauseKey2Scale", "ShowTouchPause2", SETTING(g_Config.touchControlsLandscape, touchPauseKey2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("AnalogStick2X", "AnalogStick2Y", "AnalogStick2Scale", "ShowAnalogStick2", SETTING(g_Config.touchControlsLandscape, touchAnalogStick2), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("RightAnalogStick2X", "RightAnalogStick2Y", "RightAnalogStick2Scale", "ShowRightAnalogStick2", SETTING(g_Config.touchControlsLandscape, touchRightAnalogStick2), defaultTouchPosHide, CfgFlag::PER_GAME),
+
+    // Layout Toggle Switch Button Positions
+    ConfigSetting("SwitchLayoutKeyX", "SwitchLayoutKeyY", "SwitchLayoutKeyScale", nullptr, SETTING(g_Config.touchControlsLandscape, touchSwitchLayoutKey), defaultTouchPosShow, CfgFlag::PER_GAME),
+    ConfigSetting("SwitchLayoutKey2X", "SwitchLayoutKey2Y", "SwitchLayoutKey2Scale", nullptr, SETTING(g_Config.touchControlsLandscape, touchSwitchLayoutKey2), defaultTouchPosShow, CfgFlag::PER_GAME),
 };
 
 static const ConfigSetting controlSettings[] = {
@@ -953,7 +968,8 @@ static const ConfigSetting controlSettings[] = {
 #endif
 
 	ConfigSetting("ShowTouchControls", SETTING(g_Config, bShowTouchControls), &DefaultShowTouchControls, CfgFlag::PER_GAME),
-
+    ConfigSetting("TouchLayout", SETTING(g_Config.touchControlsLandscape, iTouchLayout), 0, CfgFlag::PER_GAME),
+	
 	// ConfigSetting("KeyMapping", SETTING(g_Config, iMappingMap), 0),
 	ConfigSetting("Custom0Mapping", "Custom0Image", "Custom0Shape", "Custom0Toggle", "Custom0Repeat", SETTING_IDX(g_Config, CustomButton, 0), {0, 0, 0, false, false}, CfgFlag::PER_GAME),
 	ConfigSetting("Custom1Mapping", "Custom1Image", "Custom1Shape", "Custom1Toggle", "Custom1Repeat", SETTING_IDX(g_Config, CustomButton, 1), {0, 1, 0, false, false}, CfgFlag::PER_GAME),
