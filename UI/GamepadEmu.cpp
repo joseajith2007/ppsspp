@@ -21,6 +21,7 @@
 #include "Common/Data/Text/I18n.h"
 #include "Common/System/Display.h"
 #include "Common/System/System.h"
+#include "Common/System/NativeApp.h"
 #include "Common/Render/TextureAtlas.h"
 #include "Common/Math/math_util.h"
 #include "Common/UI/Context.h"
@@ -1015,7 +1016,7 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 
 	using namespace UI;
 
-	const bool isLayout2 = (config.iTouchLayout == 1);
+	const bool isLayout2 = (config.iTouchControlLayout == 1);
     const ConfigTouchPos &activePauseKey = isLayout2 ? config.touchPauseKey2 : config.touchPauseKey;
     const ConfigTouchPos &activeActionButtonCenter = isLayout2 ? config.touchActionButtonCenter2 : config.touchActionButtonCenter;
     const ConfigTouchPos &activeStartKey = isLayout2 ? config.touchStartKey2 : config.touchStartKey;
@@ -1140,17 +1141,16 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
         addCustomButton(g_Config.CustomButton[i], temp, config.touchCustom[i]);
     }
     
-   // On-screen Layout Toggle Button
+  // On-screen Layout Toggle Button
 	if (activeSwitchKey.show) {
 		static bool dummySwitchVal = false;
 		auto *switchBtn = addBoolButton(&dummySwitchVal, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_GEAR"), activeSwitchKey);
 		if (switchBtn) {
 			switchBtn->OnChange.Add([](UI::EventParams &e) {
 				if (e.a) {
-					g_Config.iTouchLayout = (g_Config.iTouchLayout == 1) ? 0 : 1;
+					g_Config.iTouchControlLayout = (g_Config.iTouchControlLayout == 1) ? 0 : 1;
 					NativeMessageReceived("touch_controls_changed", "");
 				}
-				return UI::EVENT_DONE;
 			});
 		}
 	}
@@ -1167,9 +1167,9 @@ void GamepadEmuView::Update() {
 	AnchorLayout::Update();
 	GamepadUpdateOpacity();
 
-	static int lastKnownLayout = g_Config.iTouchLayout;
-	if (lastKnownLayout != g_Config.iTouchLayout) {
-		lastKnownLayout = g_Config.iTouchLayout;
+	static int lastKnownLayout = g_Config.iTouchControlLayout;
+	if (lastKnownLayout != g_Config.iTouchControlLayout) {
+		lastKnownLayout = g_Config.iTouchControlLayout;
 		NativeMessageReceived("touch_controls_changed", "");
 		return;
 	}
