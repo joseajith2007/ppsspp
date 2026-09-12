@@ -1141,9 +1141,9 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
     }
 
     // On-screen Layout Toggle Button
-    if (activeSwitchKey.show) {
-        addBoolButton(nullptr, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_CONFIG"), activeSwitchKey);
-    }
+    //if (activeSwitchKey.show) {
+       // addBoolButton(nullptr, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_CONFIG"), activeSwitchKey);
+    //}
 
     // Add the two gesture zones.
     for (int i = 0; i < 2; i++) {
