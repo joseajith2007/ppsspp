@@ -125,6 +125,21 @@ struct TouchControlConfig : public ConfigBlock {
 	ConfigTouchPos touchRightAnalogStick;
 	ConfigTouchPos touchPauseKey;
 
+	// --- Dual Layout Profile Additions ---
+	int iTouchLayout = 0;
+	ConfigTouchPos touchActionButtonCenter2;
+	ConfigTouchPos touchDpad2;
+	ConfigTouchPos touchSelectKey2;
+	ConfigTouchPos touchStartKey2;
+	ConfigTouchPos touchFastForwardKey2;
+	ConfigTouchPos touchLKey2;
+	ConfigTouchPos touchRKey2;
+	ConfigTouchPos touchAnalogStick2;
+	ConfigTouchPos touchRightAnalogStick2;
+	ConfigTouchPos touchPauseKey2;
+	ConfigTouchPos touchSwitchLayoutKey;
+	ConfigTouchPos touchSwitchLayoutKey2;
+	
 	enum { CUSTOM_BUTTON_COUNT = 20 };
 
 	ConfigTouchPos touchCustom[CUSTOM_BUTTON_COUNT];
