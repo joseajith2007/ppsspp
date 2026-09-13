@@ -598,6 +598,7 @@ void TouchControlLayoutScreen::resized() {
 void TouchControlLayoutScreen::onFinish(DialogResult reason) {
 	UIBaseDialogScreen::onFinish(reason);
 	g_Config.Save("TouchControlLayoutScreen::onFinish");
+	System_PostUIMessage(UIMessage::CONFIG_LOADED);
 }
 
 void TouchControlLayoutScreen::OnReset(UI::EventParams &e) {
@@ -676,11 +677,17 @@ void TouchControlLayoutScreen::CreateViews() {
 	leftColumn->Add(snap);
 	leftColumn->Add(gridSize);
 	leftColumn->Add(new Choice(di->T("Reset")))->OnClick.Handle(this, &TouchControlLayoutScreen::OnReset);
-	TouchControlConfig &touchConfig = g_Config.GetTouchControlsConfig(orientation);
-    leftColumn->Add(new Choice(touchConfig.iTouchLayout == 1 ? "Layout 2 (Active)" : "Layout 1 (Active)"))->OnClick.Add([this, &touchConfig](UI::EventParams &e) {
-    touchConfig.iTouchLayout = (touchConfig.iTouchLayout == 1) ? 0 : 1;
-    RecreateViews();
-    });
+	const bool isLayout2 = (g_Config.touchControlsLandscape.iTouchLayout == 1);
+	leftColumn->Add(new Choice(isLayout2 ? "Layout 2 (Active)" : "Layout 1 (Active)"))->OnClick.Add([this, isLayout2](UI::EventParams &e) {
+		const int nextLayout = isLayout2 ? 0 : 1;
+		g_Config.touchControlsLandscape.iTouchLayout = nextLayout;
+		g_Config.touchControlsPortrait.iTouchLayout = nextLayout;
+		g_Config.touchControlsLandscape2.iTouchLayout = nextLayout;
+		g_Config.touchControlsPortrait2.iTouchLayout = nextLayout;
+		g_Config.Save("TouchControlLayoutScreen::SwitchLayout");
+		System_PostUIMessage(UIMessage::CONFIG_LOADED);
+		RecreateViews();
+	});
 	leftColumn->Add(new Spacer(12.0f));
 	leftColumn->Add(new Choice(di->T("Back"), ImageID("I_NAVIGATE_BACK")))->OnClick.Handle<UIScreen>(this, &UIScreen::OnBack);
 	leftColumn->Add(new Spacer(0.0f));
