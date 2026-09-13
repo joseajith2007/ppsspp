@@ -81,7 +81,8 @@ void TouchControlVisibilityScreen::CreateDialogViews(UI::ViewGroup *parent) {
 	gridsettings.fillCells = true;
 	GridLayout *grid = parent->Add(new GridLayoutList(gridsettings, new LayoutParams(FILL_PARENT, WRAP_CONTENT)));
 
-	TouchControlConfig &touch = g_Config.GetTouchControlsConfig(GetDeviceOrientation());
+	TouchControlConfig &touch = (g_Config.touchControlsLandscape.iTouchLayout == 1) ? g_Config.touchControlsLandscape2 : g_Config.touchControlsLandscape;
+ 
 
 	toggles_.clear();
 	toggles_.push_back({ "Circle", &touch.bShowTouchCircle, ImageID("I_CIRCLE"), nullptr });
