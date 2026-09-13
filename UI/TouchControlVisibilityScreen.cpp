@@ -81,25 +81,36 @@ void TouchControlVisibilityScreen::CreateDialogViews(UI::ViewGroup *parent) {
 	gridsettings.fillCells = true;
 	GridLayout *grid = parent->Add(new GridLayoutList(gridsettings, new LayoutParams(FILL_PARENT, WRAP_CONTENT)));
 
-	TouchControlConfig &touch = (g_Config.touchControlsLandscape.iTouchLayout == 1) ? g_Config.touchControlsLandscape2 : g_Config.touchControlsLandscape;
- 
+	const DeviceOrientation orientation = GetDeviceOrientation();
+	TouchControlConfig &touch = g_Config.GetTouchControlsConfig(orientation);
+	const bool isLayout2 = (g_Config.touchControlsLandscape.iTouchLayout == 1);
+
+	ConfigTouchPos &activeLKey = isLayout2 ? touch.touchLKey2 : touch.touchLKey;
+	ConfigTouchPos &activeRKey = isLayout2 ? touch.touchRKey2 : touch.touchRKey;
+	ConfigTouchPos &activeStartKey = isLayout2 ? touch.touchStartKey2 : touch.touchStartKey;
+	ConfigTouchPos &activeSelectKey = isLayout2 ? touch.touchSelectKey2 : touch.touchSelectKey;
+	ConfigTouchPos &activeDpad = isLayout2 ? touch.touchDpad2 : touch.touchDpad;
+	ConfigTouchPos &activeAnalogStick = isLayout2 ? touch.touchAnalogStick2 : touch.touchAnalogStick;
+	ConfigTouchPos &activeRightAnalogStick = isLayout2 ? touch.touchRightAnalogStick2 : touch.touchRightAnalogStick;
+	ConfigTouchPos &activeFastForwardKey = isLayout2 ? touch.touchFastForwardKey2 : touch.touchFastForwardKey;
+	ConfigTouchPos &activePauseKey = isLayout2 ? touch.touchPauseKey2 : touch.touchPauseKey;
 
 	toggles_.clear();
 	toggles_.push_back({ "Circle", &touch.bShowTouchCircle, ImageID("I_CIRCLE"), nullptr });
 	toggles_.push_back({ "Cross", &touch.bShowTouchCross, ImageID("I_CROSS"), nullptr });
 	toggles_.push_back({ "Square", &touch.bShowTouchSquare, ImageID("I_SQUARE"), nullptr });
 	toggles_.push_back({ "Triangle", &touch.bShowTouchTriangle, ImageID("I_TRIANGLE"), nullptr });
-	toggles_.push_back({ "L", &touch.touchLKey.show, ImageID("I_L"), nullptr });
-	toggles_.push_back({ "R", &touch.touchRKey.show, ImageID("I_R"), nullptr });
-	toggles_.push_back({ "Start", &touch.touchStartKey.show, ImageID("I_START"), nullptr });
-	toggles_.push_back({ "Select", &touch.touchSelectKey.show, ImageID("I_SELECT"), nullptr });
-	toggles_.push_back({ "Dpad", &touch.touchDpad.show, ImageID::invalid(), nullptr });
-	toggles_.push_back({ "Analog Stick", &touch.touchAnalogStick.show, ImageID::invalid(), nullptr });
-	toggles_.push_back({ "Right Analog Stick", &touch.touchRightAnalogStick.show, ImageID::invalid(), [=](EventParams &e) {
+	toggles_.push_back({ "L", &activeLKey.show, ImageID("I_L"), nullptr });
+	toggles_.push_back({ "R", &activeRKey.show, ImageID("I_R"), nullptr });
+	toggles_.push_back({ "Start", &activeStartKey.show, ImageID("I_START"), nullptr });
+	toggles_.push_back({ "Select", &activeSelectKey.show, ImageID("I_SELECT"), nullptr });
+	toggles_.push_back({ "Dpad", &activeDpad.show, ImageID::invalid(), nullptr });
+	toggles_.push_back({ "Analog Stick", &activeAnalogStick.show, ImageID::invalid(), nullptr });
+	toggles_.push_back({ "Right Analog Stick", &activeRightAnalogStick.show, ImageID::invalid(), [=](EventParams &e) {
 		screenManager()->push(new RightAnalogMappingScreen(gamePath_));
 	}});
-	toggles_.push_back({ "Fast-forward", &touch.touchFastForwardKey.show, ImageID::invalid(), nullptr});
-	toggles_.push_back({ "Pause", &touch.touchPauseKey.show, ImageID("I_HAMBURGER"), nullptr});
+	toggles_.push_back({ "Fast-forward", &activeFastForwardKey.show, ImageID::invalid(), nullptr});
+	toggles_.push_back({ "Pause", &activePauseKey.show, ImageID("I_HAMBURGER"), nullptr});
 
 	for (int i = 0; i < TouchControlConfig::CUSTOM_BUTTON_COUNT; i++) {
 		char temp[256];
@@ -149,6 +160,7 @@ void TouchControlVisibilityScreen::CreateDialogViews(UI::ViewGroup *parent) {
 
 void TouchControlVisibilityScreen::onFinish(DialogResult result) {
 	g_Config.Save("TouchControlVisibilityScreen::onFinish");
+	System_PostUIMessage(UIMessage::CONFIG_LOADED);
 }
 
 std::string_view RightAnalogMappingScreen::GetTitle() const {
@@ -164,11 +176,13 @@ void RightAnalogMappingScreen::CreateDialogViews(UI::ViewGroup *parent) {
 	auto mc = GetI18NCategory(I18NCat::MAPPABLECONTROLS);
 
 	TouchControlConfig &touch = g_Config.GetTouchControlsConfig(GetDeviceOrientation());
+	const bool isLayout2 = (g_Config.touchControlsLandscape.iTouchLayout == 1);
+	ConfigTouchPos &activeRightStick = isLayout2 ? touch.touchRightAnalogStick2 : touch.touchRightAnalogStick;
 
-	static const char *rightAnalogButton[] = {"None", "L", "R", "Square", "Triangle", "Circle", "Cross", "D-pad up", "D-pad down", "D-pad left", "D-pad right", "Start", "Select", "RightAn.Up", "RightAn.Down", "RightAn.Left", "RightAn.Right", "An.Up", "An.Down", "An.Left", "An.Right"};
+	static const char *rightAnalogButton[] = { "None", "L", "R", "Square", "Triangle", "Circle", "Cross", "D-pad up", "D-pad down", "D-pad left", "D-pad right", "Start", "Select", "RightAn.Up", "RightAn.Down", "RightAn.Left", "RightAn.Right", "An.Up", "An.Down", "An.Left", "An.Right" };
 
 	parent->Add(new ItemHeader(co->T("Analog Style")));
-	parent->Add(new CheckBox(&touch.touchRightAnalogStick.show, co->T("Visible")));
+	parent->Add(new CheckBox(&activeRightStick.show, co->T("Visible")));
 	parent->Add(new CheckBox(&g_Config.bRightAnalogCustom, co->T("Use custom right analog")));
 	parent->Add(new CheckBox(&g_Config.bRightAnalogDisableDiagonal, co->T("Disable diagonal input")))->SetEnabledPtr(&g_Config.bRightAnalogCustom);
 

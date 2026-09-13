@@ -240,6 +240,7 @@ void CustomButtonMappingScreen::dialogFinished(const Screen *dialog, DialogResul
 void CustomButtonMappingScreen::onFinish(DialogResult result) {
 	saveArray();
 	g_Config.Save("CustomButtonMappingScreen::onFinish");
+	System_PostUIMessage(UIMessage::CONFIG_LOADED);
 }
 
 void CustomButtonMappingScreen::ChoiceEventHandler::onChoiceClick(UI::EventParams &e){
