@@ -686,6 +686,7 @@ void TouchControlLayoutScreen::CreateViews() {
 		g_Config.touchControlsPortrait2.iTouchLayout = nextLayout;
 		g_Config.Save("TouchControlLayoutScreen::SwitchLayout");
 		System_PostUIMessage(UIMessage::CONFIG_LOADED);
+		layoutView_ = nullptr;
 		RecreateViews();
 	});
 	leftColumn->Add(new Spacer(12.0f));
