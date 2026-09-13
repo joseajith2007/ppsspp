@@ -1090,13 +1090,14 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 	}
 
 	// touchActionButtonCenter.show will always be true, since that's the default.
-	if (config.bShowTouchCircle)
+	const TouchControlConfig &activeCfg = isLayout2 ? g_Config.touchControlsLandscape2 : config;
+	if (activeCfg.bShowTouchCircle)
 		addPSPButton(CTRL_CIRCLE, "Circle button", roundImage, ImageID("I_ROUND"), ImageID("I_CIRCLE"), activeActionButtonCenter, circleOffset);
-	if (config.bShowTouchCross)
+	if (activeCfg.bShowTouchCross)
 		addPSPButton(CTRL_CROSS, "Cross button", roundImage, ImageID("I_ROUND"), ImageID("I_CROSS"), activeActionButtonCenter, crossOffset);
-	if (config.bShowTouchTriangle)
+	if (activeCfg.bShowTouchTriangle)
 		addPSPButton(CTRL_TRIANGLE, "Triangle button", roundImage, ImageID("I_ROUND"), ImageID("I_TRIANGLE"), activeActionButtonCenter, triangleOffset);
-	if (config.bShowTouchSquare)
+	if (activeCfg.bShowTouchSquare)
 		addPSPButton(CTRL_SQUARE, "Square button", roundImage, ImageID("I_ROUND"), ImageID("I_SQUARE"), activeActionButtonCenter, squareOffset);
 
 	addPSPButton(CTRL_START, "Start button", rectImage, ImageID("I_RECT"), ImageID("I_START"), activeStartKey);
@@ -1137,7 +1138,7 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 
 		char temp[64];
 		snprintf(temp, sizeof(temp), "Custom %d button", i + 1);
-		addCustomButton(g_Config.CustomButton[i], temp, config.touchCustom[i]);
+		addCustomButton(g_Config.CustomButton[i], temp, activeCfg.touchCustom[i]);
 	}
 
 	// On-screen Layout Toggle Button
