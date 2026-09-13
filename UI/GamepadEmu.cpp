@@ -1148,7 +1148,7 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 			switchBtn->OnChange.Add([](UI::EventParams &e) {
 				if (e.a) {
 					g_Config.touchControlsLandscape.iTouchLayout = (g_Config.touchControlsLandscape.iTouchLayout == 1) ? 0 : 1;
-					System_PostUIMessage(UIMessage::TOUCH_CONTROLS_CHANGED);
+					System_PostUIMessage(UIMessage::CONFIG_LOADED);
 				}
 			});
 		}
@@ -1169,7 +1169,7 @@ void GamepadEmuView::Update() {
 	static int lastKnownLayout = g_Config.touchControlsLandscape.iTouchLayout;
 	if (lastKnownLayout != g_Config.touchControlsLandscape.iTouchLayout) {
 		lastKnownLayout = g_Config.touchControlsLandscape.iTouchLayout;
-		System_PostUIMessage(UIMessage::TOUCH_CONTROLS_CHANGED);
+		System_PostUIMessage(UIMessage::CONFIG_LOADED);
 		return;
 	}
 
