@@ -527,7 +527,9 @@ public:
 	bool bTouchGliding;
 
 	TouchControlConfig touchControlsLandscape;
+	TouchControlConfig touchControlsLandscape2;
 	TouchControlConfig touchControlsPortrait;
+	TouchControlConfig touchControlsPortrait2;
 
 	// These are shared between portrait and landscape, just the positions aren't.
 	ConfigCustomButton CustomButton[TouchControlConfig::CUSTOM_BUTTON_COUNT];
@@ -787,10 +789,16 @@ public:
 		return orientation == DeviceOrientation::Portrait ? displayLayoutPortrait : displayLayoutLandscape;
 	}
 	const TouchControlConfig &GetTouchControlsConfig(DeviceOrientation orientation) const {
-		return orientation == DeviceOrientation::Portrait ? touchControlsPortrait : touchControlsLandscape;
+		if (orientation == DeviceOrientation::Portrait) {
+			return (touchControlsPortrait.iTouchLayout == 1) ? touchControlsPortrait2 : touchControlsPortrait;
+		}
+		return (touchControlsLandscape.iTouchLayout == 1) ? touchControlsLandscape2 : touchControlsLandscape;
 	}
 	TouchControlConfig &GetTouchControlsConfig(DeviceOrientation orientation) {
-		return orientation == DeviceOrientation::Portrait ? touchControlsPortrait : touchControlsLandscape;
+		if (orientation == DeviceOrientation::Portrait) {
+			return (touchControlsPortrait.iTouchLayout == 1) ? touchControlsPortrait2 : touchControlsPortrait;
+		}
+		return (touchControlsLandscape.iTouchLayout == 1) ? touchControlsLandscape2 : touchControlsLandscape;
 	}
 
 	static int GetDefaultValueInt(int *configSetting);
