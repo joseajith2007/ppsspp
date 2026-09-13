@@ -676,6 +676,12 @@ void TouchControlLayoutScreen::CreateViews() {
 	leftColumn->Add(snap);
 	leftColumn->Add(gridSize);
 	leftColumn->Add(new Choice(di->T("Reset")))->OnClick.Handle(this, &TouchControlLayoutScreen::OnReset);
+	TouchControlConfig &touchConfig = g_Config.GetTouchControlsConfig(orientation);
+    leftColumn->Add(new Choice(touchConfig.iTouchLayout == 1 ? "Layout 2 (Active)" : "Layout 1 (Active)"))->OnClick.Add([this, &touchConfig](UI::EventParams &e) {
+    touchConfig.iTouchLayout = (touchConfig.iTouchLayout == 1) ? 0 : 1;
+    RecreateViews();
+    return UI::EVENT_DONE;
+    });
 	leftColumn->Add(new Spacer(12.0f));
 	leftColumn->Add(new Choice(di->T("Back"), ImageID("I_NAVIGATE_BACK")))->OnClick.Handle<UIScreen>(this, &UIScreen::OnBack);
 	leftColumn->Add(new Spacer(0.0f));

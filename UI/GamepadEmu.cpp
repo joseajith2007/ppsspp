@@ -34,11 +34,6 @@
 #include "Core/ControlMapper.h"
 #include "UI/GamepadEmu.h"
 
-#if defined(__GNUC__) || defined(__clang__)
-__attribute__((weak))
-#endif
-void NativeMessageReceived(const char *message, const char *value) {}
-
 const float TOUCH_SCALE_FACTOR = 1.5f;
 
 static uint32_t usedPointerMask = 0;
@@ -1153,7 +1148,7 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 			switchBtn->OnChange.Add([](UI::EventParams &e) {
 				if (e.a) {
 					g_Config.touchControlsLandscape.iTouchLayout = (g_Config.touchControlsLandscape.iTouchLayout == 1) ? 0 : 1;
-					NativeMessageReceived("touch_controls_changed", "");
+					System_SendMessage("touch_controls_changed", "");
 				}
 			});
 		}
@@ -1174,7 +1169,7 @@ void GamepadEmuView::Update() {
 	static int lastKnownLayout = g_Config.touchControlsLandscape.iTouchLayout;
 	if (lastKnownLayout != g_Config.touchControlsLandscape.iTouchLayout) {
 		lastKnownLayout = g_Config.touchControlsLandscape.iTouchLayout;
-		NativeMessageReceived("touch_controls_changed", "");
+		System_SendMessage("touch_controls_changed", "");
 		return;
 	}
 
