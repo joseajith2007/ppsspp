@@ -1141,18 +1141,23 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 	}
 
 	// On-screen Layout Toggle Button
-	if (activeSwitchKey.show) {
-		static bool dummySwitchVal = false;
-		auto *switchBtn = addBoolButton(&dummySwitchVal, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_GEAR"), activeSwitchKey);
-		if (switchBtn) {
-			switchBtn->OnChange.Add([](UI::EventParams &e) {
-				if (e.a) {
-					g_Config.touchControlsLandscape.iTouchLayout = (g_Config.touchControlsLandscape.iTouchLayout == 1) ? 0 : 1;
-					System_PostUIMessage(UIMessage::CONFIG_LOADED);
-				}
-			});
-		}
-	}
+    if (activeSwitchKey.show) {
+    static bool dummySwitchVal = false;
+    auto *switchBtn = addBoolButton(&dummySwitchVal, "Switch Layout", roundImage, ImageID("I_ROUND"), ImageID("I_GEAR"), activeSwitchKey);
+    if (switchBtn) {
+        switchBtn->OnChange.Add([](UI::EventParams &e) {
+            static double lastSwitchTime = 0.0;
+            double now = time_now_d();
+            // Only trigger on release (!e.a) with a 250ms cooldown
+            if (!e.a && (now - lastSwitchTime > 0.25)) {
+                lastSwitchTime = now;
+                g_Config.touchControlsLandscape.iTouchLayout = (g_Config.touchControlsLandscape.iTouchLayout == 1) ? 0 : 1;
+                g_Config.touchControlsPortrait.iTouchLayout = g_Config.touchControlsLandscape.iTouchLayout;
+                System_PostUIMessage(UIMessage::CONFIG_LOADED);
+            }
+        });
+    }
+}
 
 	// Add the two gesture zones.
 	for (int i = 0; i < 2; i++) {
@@ -1165,13 +1170,6 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 void GamepadEmuView::Update() {
 	AnchorLayout::Update();
 	GamepadUpdateOpacity();
-
-	static int lastKnownLayout = g_Config.touchControlsLandscape.iTouchLayout;
-	if (lastKnownLayout != g_Config.touchControlsLandscape.iTouchLayout) {
-		lastKnownLayout = g_Config.touchControlsLandscape.iTouchLayout;
-		System_PostUIMessage(UIMessage::CONFIG_LOADED);
-		return;
-	}
 
 	bool anyDown = false;
 	for (auto view : views_) {
