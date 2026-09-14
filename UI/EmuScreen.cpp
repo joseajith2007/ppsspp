@@ -506,9 +506,10 @@ void EmuScreen::dialogFinished(const Screen *dialog, DialogResult result) {
 		screenManager()->switchScreen(new MainScreen());
 		quit_ = false;
 	} else {
+		g_Config.Load();
 		RecreateViews();
 	}
-
+	
 	SetExtraAssertInfo(extraAssertInfoStr_.c_str());
 }
 

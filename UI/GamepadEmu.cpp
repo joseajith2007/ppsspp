@@ -969,9 +969,9 @@ void InitPadLayout(TouchControlConfig *config, DeviceOrientation orientation, fl
 	initTouchPos(&config->touchDpad2, D_pad_X, D_pad_Y);
 	initTouchPos(&config->touchAnalogStick2, analog_stick_X, analog_stick_Y);
 	initTouchPos(&config->touchRightAnalogStick2, right_analog_stick_X, right_analog_stick_Y);
-	config->touchStartKey2 = config->touchStartKey;
-	config->touchSelectKey2 = config->touchSelectKey;
-	config->touchFastForwardKey2 = config->touchFastForwardKey;
+	initTouchPos(&config->touchStartKey2, start_key_X, start_key_Y);
+	initTouchPos(&config->touchSelectKey2, select_key_X, select_key_Y);
+	initTouchPos(&config->touchFastForwardKey2, fast_forward_key_X, fast_forward_key_Y);
 	initTouchPos(&config->touchLKey2, l_key_X, l_key_Y);
 	initTouchPos(&config->touchRKey2, r_key_X, r_key_Y);
 
@@ -1090,7 +1090,7 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 	}
 
 	// touchActionButtonCenter.show will always be true, since that's the default.
-	const TouchControlConfig &activeCfg = isLayout2 ? g_Config.touchControlsLandscape2 : config;
+	const TouchControlConfig &activeCfg = isLayout2 ? g_Config.GetTouchControlsConfig(g_display.GetDeviceOrientation()) : config;
 	if (activeCfg.bShowTouchCircle)
 		addPSPButton(CTRL_CIRCLE, "Circle button", roundImage, ImageID("I_ROUND"), ImageID("I_CIRCLE"), activeActionButtonCenter, circleOffset);
 	if (activeCfg.bShowTouchCross)
