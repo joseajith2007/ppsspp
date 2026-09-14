@@ -969,9 +969,9 @@ void InitPadLayout(TouchControlConfig *config, DeviceOrientation orientation, fl
 	initTouchPos(&config->touchDpad2, D_pad_X, D_pad_Y);
 	initTouchPos(&config->touchAnalogStick2, analog_stick_X, analog_stick_Y);
 	initTouchPos(&config->touchRightAnalogStick2, right_analog_stick_X, right_analog_stick_Y);
-	initTouchPos(&config->touchStartKey2, start_key_X, start_key_Y);
-	initTouchPos(&config->touchSelectKey2, select_key_X, select_key_Y);
-	initTouchPos(&config->touchFastForwardKey2, fast_forward_key_X, fast_forward_key_Y);
+	if (config->touchStartKey2.x < 0.0f) config->touchStartKey2 = config->touchStartKey;
+    if (config->touchSelectKey2.x < 0.0f) config->touchSelectKey2 = config->touchSelectKey;
+    if (config->touchFastForwardKey2.x < 0.0f) config->touchFastForwardKey2 = config->touchFastForwardKey;
 	initTouchPos(&config->touchLKey2, l_key_X, l_key_Y);
 	initTouchPos(&config->touchRKey2, r_key_X, r_key_Y);
 
