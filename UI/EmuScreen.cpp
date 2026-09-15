@@ -453,40 +453,42 @@ EmuScreen::~EmuScreen() {
 	// TODO: We need to somehow handle exit callbacks here, too.
 
 	Achievements::UnloadGame();
-	PSP_Shutdown(true);
+    if (coreState != CORE_POWERDOWN) {
+    Core_Stop();
+    }
+    PSP_Shutdown(true);
 
-	// If achievements are disabled in the global config, let's shut it down here.
-	if (!g_Config.bAchievementsEnable) {
-		Achievements::Shutdown();
-	}
+    // If achievements are disabled in the global config, let's shut it down here.
+    if (!g_Config.bAchievementsEnable) {
+    Achievements::Shutdown();
+    }
 
-	_dbg_assert_(coreState == CORE_POWERDOWN);
+    coreState = CORE_POWERDOWN;
 
-	System_PostUIMessage(UIMessage::GAME_SELECTED, "");
+    System_PostUIMessage(UIMessage::GAME_SELECTED, "");
 
-	g_OSD.ClearAchievementStuff();
+    g_OSD.ClearAchievementStuff();
 
-	SetExtraAssertInfo(nullptr);
-	SetAssertCancelCallback(nullptr, nullptr);
+    SetExtraAssertInfo(nullptr);
+    SetAssertCancelCallback(nullptr, nullptr);
 
-	g_logManager.DisableOutput(LogOutput::RingBuffer);
+    g_logManager.DisableOutput(LogOutput::RingBuffer);
 
-#ifndef MOBILE_DEVICE
-	if (g_Config.bDumpFrames && startDumping_)
-	{
-		avi.Stop();
-		g_OSD.Show(OSDType::MESSAGE_INFO, "AVI Dump stopped.", 2.0f);
-		startDumping_ = false;
-	}
-#endif
+    #ifndef MOBILE_DEVICE
+    if (g_Config.bDumpFrames && startDumping_)
+    {
+    avi.Stop();
+    g_OSD.Show(OSDType::MESSAGE_INFO, "AVI Dump stopped.", 2.0f);
+    startDumping_ = false;
+    }
+    #endif
 
-	if (GetUIState() == UISTATE_EXIT)
-		g_Discord.ClearPresence();
-	else
-		g_Discord.SetPresenceMenu();
+    if (GetUIState() == UISTATE_EXIT)
+    g_Discord.ClearPresence();
+    else
+    g_Discord.SetPresenceMenu();
 
-	// This makes sure that the recents list is updated, among other things.
-    if (coreState != CORE_RUNTIME_ERROR && !bootPending_) {
+    if (!bootPending_) {
     g_Config.Save("exitGame");
     }
 }
@@ -503,10 +505,11 @@ void EmuScreen::dialogFinished(const Screen *dialog, DialogResult result) {
 
 	// TODO: improve the way with which we got commands from PauseMenu.
 	// DR_CANCEL/DR_BACK means clicked on "continue", DR_OK means clicked on "back to menu",
-	// DR_YES means a message sent to PauseMenu by System_PostUIMessage.
-	if ((result == DR_OK || quit_) && !bootPending_) {
-    screenManager()->switchScreen(new MainScreen());
+    // DR_YES means a message sent to PauseMenu by System_PostUIMessage.
+    if ((result == DR_OK || quit_) && !bootPending_) {
     quit_ = false;
+    Core_Stop();
+    System_PostUIMessage(UIMessage::REQUEST_GAME_STOP);
     } else {
     RecreateViews();
     }
