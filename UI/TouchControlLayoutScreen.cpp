@@ -595,9 +595,11 @@ void TouchControlLayoutScreen::resized() {
 }
 
 void TouchControlLayoutScreen::onFinish(DialogResult reason) {
-	UIBaseDialogScreen::onFinish(reason);
-	g_Config.Save("TouchControlLayoutScreen::onFinish");
-	System_PostUIMessage(UIMessage::CONFIG_LOADED);
+    UIBaseDialogScreen::onFinish(reason);
+    g_Config.Save("TouchControlLayoutScreen::onFinish");
+    if (coreState == CORE_RUNNING) {
+        System_PostUIMessage(UIMessage::CONFIG_LOADED);
+    }
 }
 
 void TouchControlLayoutScreen::OnReset(UI::EventParams &e) {
