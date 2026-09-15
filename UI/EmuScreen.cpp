@@ -453,9 +453,11 @@ EmuScreen::~EmuScreen() {
 	// TODO: We need to somehow handle exit callbacks here, too.
 
 	Achievements::UnloadGame();
-	Core_Stop();
-	PSP_Shutdown(true);
-	coreState = CORE_POWERDOWN;
+    if (coreState != CORE_POWERDOWN) {
+    Core_Stop();
+    PSP_Shutdown(true);
+    }
+    coreState = CORE_POWERDOWN;
 
     // If achievements are disabled in the global config, let's shut it down here.
     if (!g_Config.bAchievementsEnable) {
@@ -502,14 +504,16 @@ void EmuScreen::dialogFinished(const Screen *dialog, DialogResult result) {
 
 	// TODO: improve the way with which we got commands from PauseMenu.
 	// DR_CANCEL/DR_BACK means clicked on "continue", DR_OK means clicked on "back to menu",
-	// DR_YES means a message sent to PauseMenu by System_PostUIMessage.
-	if ((result == DR_OK || quit_) && !bootPending_) {
-		quit_ = true;
-		Core_Stop();
-		System_PostUIMessage(UIMessage::REQUEST_GAME_STOP);
-	} else {
-		RecreateViews();
-	} 
+    // DR_YES means a message sent to PauseMenu by System_PostUIMessage.
+    if ((result == DR_OK || quit_) && !bootPending_) {
+    quit_ = false;
+    Core_Stop();
+    PSP_Shutdown(true);
+    coreState = CORE_POWERDOWN;
+    screenManager()->switchScreen(new MainScreen());
+    } else {
+    RecreateViews();
+    }
 	
 	SetExtraAssertInfo(extraAssertInfoStr_.c_str());
 }
