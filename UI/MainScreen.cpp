@@ -665,19 +665,27 @@ void MainScreen::DrawBackgroundFor(UIContext &dc, const Path &gamePath, float al
 }
 
 void MainScreen::OnGameSelected(UI::EventParams &e) {
-	Path path(e.s);
-	std::shared_ptr<GameInfo> ginfo = g_gameInfoCache->GetInfo(nullptr, path, GameInfoFlags::FILE_TYPE);
-	if (ginfo->fileType == IdentifiedFileType::PSP_SAVEDATA_DIRECTORY) {
-		return;
-	}
-	if (g_GameManager.GetState() == GameManagerState::INSTALLING)
-		return;
+    static double lastGameSelectTime = 0.0;
+    double now = time_now_d();
+    if (now - lastGameSelectTime < 0.6) {
+        return;
+    }
+    lastGameSelectTime = now;
 
-	// Restore focus if it was highlighted (e.g. by gamepad.)
-	restoreFocusGamePath_ = highlightedGamePath_;
-	g_BackgroundAudio.SetGame(path);
-	lockBackgroundAudio_ = true;
-	screenManager()->push(new GameScreen(path, false));
+    Path path(e.s);
+    std::shared_ptr<GameInfo> ginfo = g_gameInfoCache->GetInfo(nullptr, path, GameInfoFlags::FILE_TYPE);
+    if (ginfo->fileType == IdentifiedFileType::PSP_SAVEDATA_DIRECTORY) {
+        return;
+    }
+    if (g_GameManager.GetState() == GameManagerState::INSTALLING) {
+        return;
+    }
+
+    // Restore focus if it was highlighted (e.g. by gamepad.)
+    restoreFocusGamePath_ = highlightedGamePath_;
+    g_BackgroundAudio.SetGame(path);
+    lockBackgroundAudio_ = true;
+    screenManager()->push(new GameScreen(path, false));
 }
 
 void MainScreen::InstantHighlight(const Path &path) {
