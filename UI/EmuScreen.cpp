@@ -151,13 +151,14 @@ void EmuScreen::SetPSPAnalog(int iInternalScreenRotation, int stick, float x, fl
 }
 
 EmuScreen::EmuScreen(const Path &filename)
-	: gamePath_(filename) {
-	saveStateSlot_ = SaveState::GetCurrentSlot();
-	g_controlMapper.AddListener(this);
+    : gamePath_(filename) {
+    saveStateSlot_ = SaveState::GetCurrentSlot();
+    g_controlMapper.AddListener(this);
 
-	_dbg_assert_(coreState == CORE_POWERDOWN);
+    _dbg_assert_(coreState == CORE_POWERDOWN);
+    coreState = CORE_POWERED_OFF;
 
-	OnDevMenu.Handle(this, &EmuScreen::OnDevTools);
+    OnDevMenu.Handle(this, &EmuScreen::OnDevTools);
 
 	// Usually, we don't want focus movement enabled on this screen, so disable on start.
 	// Only if you open chat or dev tools do we want it to start working.
@@ -1486,14 +1487,12 @@ void EmuScreen::update() {
 }
 
 bool EmuScreen::checkPowerDown() {
-	// This is for handling things like sceKernelExitGame().
-	// Also for REQUEST_STOP.
-	if (coreState == CORE_POWERDOWN && PSP_GetBootState() == BootState::Complete && !bootPending_) {
-		INFO_LOG(Log::System, "SELF-POWERDOWN!");
-		screenManager()->switchScreen(new MainScreen());
-		return true;
-	}
-	return false;
+    if (coreState == CORE_POWERDOWN && PSP_IsInited() && !bootPending_ && !readyToFinishBoot_) {
+        INFO_LOG(Log::System, "SELF-POWERDOWN!");
+        screenManager()->switchScreen(new MainScreen());
+        return true;
+    }
+    return false;
 }
 
 ScreenRenderRole EmuScreen::renderRole(bool isTop) const {
