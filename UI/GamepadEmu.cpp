@@ -1019,18 +1019,17 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 
 	using namespace UI;
 
-	const bool isLayout2 = (config.iTouchLayout == 1);
-	const ConfigTouchPos &activePauseKey = isLayout2 ? config.touchPauseKey2 : config.touchPauseKey;
-	const ConfigTouchPos &activeActionButtonCenter = isLayout2 ? config.touchActionButtonCenter2 : config.touchActionButtonCenter;
-	const ConfigTouchPos &activeStartKey = isLayout2 ? config.touchStartKey2 : config.touchStartKey;
-	const ConfigTouchPos &activeSelectKey = isLayout2 ? config.touchSelectKey2 : config.touchSelectKey;
-	const ConfigTouchPos &activeFastForwardKey = isLayout2 ? config.touchFastForwardKey2 : config.touchFastForwardKey;
-	const ConfigTouchPos &activeLKey = isLayout2 ? config.touchLKey2 : config.touchLKey;
-	const ConfigTouchPos &activeRKey = isLayout2 ? config.touchRKey2 : config.touchRKey;
-	const ConfigTouchPos &activeDpad = isLayout2 ? config.touchDpad2 : config.touchDpad;
-	const ConfigTouchPos &activeAnalogStick = isLayout2 ? config.touchAnalogStick2 : config.touchAnalogStick;
-	const ConfigTouchPos &activeRightAnalogStick = isLayout2 ? config.touchRightAnalogStick2 : config.touchRightAnalogStick;
-	const ConfigTouchPos &activeSwitchKey = isLayout2 ? config.touchSwitchLayoutKey2 : config.touchSwitchLayoutKey;
+	const ConfigTouchPos &activePauseKey = config.touchPauseKey;
+    const ConfigTouchPos &activeActionButtonCenter = config.touchActionButtonCenter;
+    const ConfigTouchPos &activeStartKey = config.touchStartKey;
+    const ConfigTouchPos &activeSelectKey = config.touchSelectKey;
+    const ConfigTouchPos &activeFastForwardKey = config.touchFastForwardKey;
+    const ConfigTouchPos &activeLKey = config.touchLKey;
+    const ConfigTouchPos &activeRKey = config.touchRKey;
+    const ConfigTouchPos &activeDpad = config.touchDpad;
+    const ConfigTouchPos &activeAnalogStick = config.touchAnalogStick;
+    const ConfigTouchPos &activeRightAnalogStick = config.touchRightAnalogStick;
+    const ConfigTouchPos &activeSwitchKey = config.touchSwitchLayoutKey;
 
 	struct ButtonOffset {
 		float x;

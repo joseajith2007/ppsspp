@@ -477,18 +477,17 @@ void ControlLayoutView::CreateViews() {
 
 	// Create all the subviews.
 	TouchControlConfig &touch = g_Config.GetTouchControlsConfig(deviceOrientation_);
-	const bool isLayout2 = (touch.iTouchLayout == 1);
-    ConfigTouchPos &activePauseKey = isLayout2 ? touch.touchPauseKey2 : touch.touchPauseKey;
-    ConfigTouchPos &activeActionButtonCenter = isLayout2 ? touch.touchActionButtonCenter2 : touch.touchActionButtonCenter;
-    ConfigTouchPos &activeStartKey = isLayout2 ? touch.touchStartKey2 : touch.touchStartKey;
-    ConfigTouchPos &activeSelectKey = isLayout2 ? touch.touchSelectKey2 : touch.touchSelectKey;
-    ConfigTouchPos &activeFastForwardKey = isLayout2 ? touch.touchFastForwardKey2 : touch.touchFastForwardKey;
-    ConfigTouchPos &activeLKey = isLayout2 ? touch.touchLKey2 : touch.touchLKey;
-    ConfigTouchPos &activeRKey = isLayout2 ? touch.touchRKey2 : touch.touchRKey;
-    ConfigTouchPos &activeDpad = isLayout2 ? touch.touchDpad2 : touch.touchDpad;
-    ConfigTouchPos &activeAnalogStick = isLayout2 ? touch.touchAnalogStick2 : touch.touchAnalogStick;
-    ConfigTouchPos &activeRightAnalogStick = isLayout2 ? touch.touchRightAnalogStick2 : touch.touchRightAnalogStick;
-    ConfigTouchPos &activeSwitchKey = isLayout2 ? touch.touchSwitchLayoutKey2 : touch.touchSwitchLayoutKey;
+    ConfigTouchPos &activePauseKey = touch.touchPauseKey;
+    ConfigTouchPos &activeActionButtonCenter = touch.touchActionButtonCenter;
+    ConfigTouchPos &activeStartKey = touch.touchStartKey;
+    ConfigTouchPos &activeSelectKey = touch.touchSelectKey;
+    ConfigTouchPos &activeFastForwardKey = touch.touchFastForwardKey;
+    ConfigTouchPos &activeLKey = touch.touchLKey;
+    ConfigTouchPos &activeRKey = touch.touchRKey;
+    ConfigTouchPos &activeDpad = touch.touchDpad;
+    ConfigTouchPos &activeAnalogStick = touch.touchAnalogStick;
+    ConfigTouchPos &activeRightAnalogStick = touch.touchRightAnalogStick;
+    ConfigTouchPos &activeSwitchKey = touch.touchSwitchLayoutKey;
 
 	if (touch.bShowTouchCircle || touch.bShowTouchCross || touch.bShowTouchTriangle || touch.bShowTouchSquare) {
 		PSPActionButtons *actionButtons = new PSPActionButtons(activeActionButtonCenter, "Action buttons", touch.fActionButtonSpacing, bounds);
