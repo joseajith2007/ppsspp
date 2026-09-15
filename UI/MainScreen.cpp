@@ -64,7 +64,14 @@
 bool MainScreen::showHomebrewTab = false;
 
 static void LaunchFile(ScreenManager *screenManager, Screen *currentScreen, const Path &path) {
-	std::string extension = path.GetFileExtension();
+    static double lastLaunchTime = 0.0;
+    double now = time_now_d();
+    if (now - lastLaunchTime < 0.6) {
+        return;
+    }
+    lastLaunchTime = now;
+
+    std::string extension = path.GetFileExtension();
 	if (extension == ".zip" || extension == ".7z") {
 		// If is a zip file, we have a screen for that.
 		screenManager->push(new InstallZipScreen(path));
@@ -742,8 +749,15 @@ void MainScreen::OnGameHighlight(UI::EventParams &e) {
 }
 
 void MainScreen::OnGameSelectedInstant(UI::EventParams &e) {
-	ScreenManager *screen = screenManager();
-	LaunchFile(screen, nullptr, Path(e.s));
+    static double lastInstantTime = 0.0;
+    double now = time_now_d();
+    if (now - lastInstantTime < 0.6) {
+        return;
+    }
+    lastInstantTime = now;
+
+    ScreenManager *screen = screenManager();
+    LaunchFile(screen, this, Path(e.s));
 }
 
 void MainScreen::OnGameSettings(UI::EventParams &e) {

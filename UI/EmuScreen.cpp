@@ -162,7 +162,6 @@ EmuScreen::EmuScreen(const Path &filename)
 	// Usually, we don't want focus movement enabled on this screen, so disable on start.
 	// Only if you open chat or dev tools do we want it to start working.
 	UI::EnableFocusMovement(false);
-	__AudioPause(0);
 }
 
 bool EmuScreen::bootAllowStorage(const Path &filename) {
@@ -508,8 +507,6 @@ void EmuScreen::dialogFinished(const Screen *dialog, DialogResult result) {
     // DR_YES means a message sent to PauseMenu by System_PostUIMessage.
     if ((result == DR_OK || quit_) && !bootPending_) {
 		quit_ = false;
-		// Stop audio playback immediately so the driver closes cleanly before menu renders
-		__AudioPause(1);
 		screenManager()->switchScreen(new MainScreen());
 	} else {
 		RecreateViews();
