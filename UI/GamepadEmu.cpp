@@ -1158,7 +1158,6 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
             g_Config.iTouchLayout = (g_Config.iTouchLayout == 1) ? 0 : 1;
             g_Config.touchControlsLandscape.iTouchLayout = g_Config.iTouchLayout;
             g_Config.touchControlsPortrait.iTouchLayout = g_Config.iTouchLayout;
-            g_Config.Save("GamepadEmu::SwitchLayout");
             }
         });
     }
