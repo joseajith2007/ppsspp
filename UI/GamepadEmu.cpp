@@ -1154,10 +1154,12 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
             double now = time_now_d();
             // Only trigger on release (!e.a) with a 250ms cooldown
             if (!e.a && (now - lastSwitchTime > 0.25)) {
-                lastSwitchTime = now;
-                g_Config.touchControlsLandscape.iTouchLayout = (g_Config.touchControlsLandscape.iTouchLayout == 1) ? 0 : 1;
-                g_Config.touchControlsPortrait.iTouchLayout = g_Config.touchControlsLandscape.iTouchLayout;
-                System_PostUIMessage(UIMessage::CONFIG_LOADED);
+            lastSwitchTime = now;
+            g_Config.iTouchLayout = (g_Config.iTouchLayout == 1) ? 0 : 1;
+            g_Config.touchControlsLandscape.iTouchLayout = g_Config.iTouchLayout;
+            g_Config.touchControlsPortrait.iTouchLayout = g_Config.iTouchLayout;
+            g_Config.Save("GamepadEmu::SwitchLayout");
+            System_PostUIMessage(UIMessage::CONFIG_LOADED);
             }
         });
     }

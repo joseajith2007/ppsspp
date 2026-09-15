@@ -503,6 +503,7 @@ public:
 
 	// Controls Visibility
 	bool bShowTouchControls = false;
+	int iTouchLayout = 0;
 
 	// Disable diagonals
 	bool bDisableDpadDiagonals;
@@ -789,17 +790,17 @@ public:
 		return orientation == DeviceOrientation::Portrait ? displayLayoutPortrait : displayLayoutLandscape;
 	}
 	const TouchControlConfig &GetTouchControlsConfig(DeviceOrientation orientation) const {
-		if (orientation == DeviceOrientation::Portrait) {
-			return (touchControlsPortrait.iTouchLayout == 1) ? touchControlsPortrait2 : touchControlsPortrait;
-		}
-		return (touchControlsLandscape.iTouchLayout == 1) ? touchControlsLandscape2 : touchControlsLandscape;
+	if (orientation == DeviceOrientation::Portrait) {
+		return (iTouchLayout == 1) ? touchControlsPortrait2 : touchControlsPortrait;
 	}
-	TouchControlConfig &GetTouchControlsConfig(DeviceOrientation orientation) {
-		if (orientation == DeviceOrientation::Portrait) {
-			return (touchControlsPortrait.iTouchLayout == 1) ? touchControlsPortrait2 : touchControlsPortrait;
-		}
-		return (touchControlsLandscape.iTouchLayout == 1) ? touchControlsLandscape2 : touchControlsLandscape;
+	return (iTouchLayout == 1) ? touchControlsLandscape2 : touchControlsLandscape;
+    }
+    TouchControlConfig &GetTouchControlsConfig(DeviceOrientation orientation) {
+	if (orientation == DeviceOrientation::Portrait) {
+		return (iTouchLayout == 1) ? touchControlsPortrait2 : touchControlsPortrait;
 	}
+	return (iTouchLayout == 1) ? touchControlsLandscape2 : touchControlsLandscape;
+    }
 
 	static int GetDefaultValueInt(int *configSetting);
 

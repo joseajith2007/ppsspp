@@ -676,13 +676,11 @@ void TouchControlLayoutScreen::CreateViews() {
 	leftColumn->Add(snap);
 	leftColumn->Add(gridSize);
 	leftColumn->Add(new Choice(di->T("Reset")))->OnClick.Handle(this, &TouchControlLayoutScreen::OnReset);
-	const bool isLayout2 = (g_Config.touchControlsLandscape.iTouchLayout == 1);
-	leftColumn->Add(new Choice(isLayout2 ? "Layout 2 (Active)" : "Layout 1 (Active)"))->OnClick.Add([this, isLayout2](UI::EventParams &e) {
-		const int nextLayout = isLayout2 ? 0 : 1;
-		g_Config.touchControlsLandscape.iTouchLayout = nextLayout;
-		g_Config.touchControlsPortrait.iTouchLayout = nextLayout;
-		g_Config.touchControlsLandscape2.iTouchLayout = nextLayout;
-		g_Config.touchControlsPortrait2.iTouchLayout = nextLayout;
+	const bool isLayout2 = (g_Config.iTouchLayout == 1);
+	leftColumn->Add(new Choice(isLayout2 ? "Layout 2 (Active)" : "Layout 1 (Active)"))->OnClick.Add([this](UI::EventParams &e) {
+		g_Config.iTouchLayout = (g_Config.iTouchLayout == 1) ? 0 : 1;
+		g_Config.touchControlsLandscape.iTouchLayout = g_Config.iTouchLayout;
+		g_Config.touchControlsPortrait.iTouchLayout = g_Config.iTouchLayout;
 		g_Config.Save("TouchControlLayoutScreen::SwitchLayout");
 		layoutView_ = nullptr;
 		RecreateViews();
