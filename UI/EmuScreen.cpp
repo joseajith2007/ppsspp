@@ -156,7 +156,6 @@ EmuScreen::EmuScreen(const Path &filename)
     g_controlMapper.AddListener(this);
 
     _dbg_assert_(coreState == CORE_POWERDOWN);
-    coreState = CORE_POWERED_OFF;
 
     OnDevMenu.Handle(this, &EmuScreen::OnDevTools);
 
