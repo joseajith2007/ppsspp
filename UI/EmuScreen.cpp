@@ -486,7 +486,9 @@ EmuScreen::~EmuScreen() {
 		g_Discord.SetPresenceMenu();
 
 	// This makes sure that the recents list is updated, among other things.
-	g_Config.Save("exitGame");
+    if (coreState != CORE_RUNTIME_ERROR && !bootPending_) {
+    g_Config.Save("exitGame");
+    }
 }
 
 void EmuScreen::dialogFinished(const Screen *dialog, DialogResult result) {
@@ -1214,11 +1216,17 @@ void EmuScreen::CreateViews() {
 
 	const DeviceOrientation deviceOrientation = GetDeviceOrientation();
 
-	TouchControlConfig &touch = g_Config.GetTouchControlsConfig(deviceOrientation);
-
 	const Bounds &bounds = GetLayoutBounds(*screenManager()->getUIContext());
 
-	InitPadLayout(&touch, deviceOrientation, bounds.w, bounds.h);
+    if (deviceOrientation == DeviceOrientation::Portrait) {
+    InitPadLayout(&g_Config.touchControlsPortrait, deviceOrientation, bounds.w, bounds.h);
+    InitPadLayout(&g_Config.touchControlsPortrait2, deviceOrientation, bounds.w, bounds.h);
+    } else {
+    InitPadLayout(&g_Config.touchControlsLandscape, deviceOrientation, bounds.w, bounds.h);
+    InitPadLayout(&g_Config.touchControlsLandscape2, deviceOrientation, bounds.w, bounds.h);
+    }
+
+TouchControlConfig &touch = g_Config.GetTouchControlsConfig(deviceOrientation);
 
 	root_ = CreatePadLayout(touch, bounds.w, bounds.h, &pauseTrigger_, &g_controlMapper);
 	if (g_Config.bShowDeveloperMenu) {
