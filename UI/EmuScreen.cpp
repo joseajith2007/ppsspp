@@ -453,11 +453,9 @@ EmuScreen::~EmuScreen() {
 	// TODO: We need to somehow handle exit callbacks here, too.
 
 	Achievements::UnloadGame();
-	if (coreState != CORE_POWERDOWN) {
-		Core_Stop();
-		PSP_Shutdown(true);
-	}
-	coreState = CORE_POWERDOWN; 
+	Core_Stop();
+	PSP_Shutdown(true);
+	coreState = CORE_POWERDOWN;
 
     // If achievements are disabled in the global config, let's shut it down here.
     if (!g_Config.bAchievementsEnable) {
