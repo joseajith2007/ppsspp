@@ -967,8 +967,12 @@ void InitPadLayout(TouchControlConfig *config, DeviceOrientation orientation, fl
 	initTouchPos(&config->touchPauseKey2, Pause_button_center_X, Pause_button_center_Y, 0.8f);
 	initTouchPos(&config->touchActionButtonCenter2, Action_button_center_X, Action_button_center_Y);
 	initTouchPos(&config->touchDpad2, D_pad_X, D_pad_Y);
-	initTouchPos(&config->touchAnalogStick2, analog_stick_X, analog_stick_Y);
-	initTouchPos(&config->touchRightAnalogStick2, right_analog_stick_X, right_analog_stick_Y);
+	if (config->touchAnalogStick2.x < 0.0f) {
+    initTouchPos(&config->touchAnalogStick2, analog_stick_X, analog_stick_Y);
+    }
+    if (config->touchRightAnalogStick2.x < 0.0f) {
+    initTouchPos(&config->touchRightAnalogStick2, right_analog_stick_X, right_analog_stick_Y);
+    }
 	if (config->touchStartKey2.x < 0.0f) config->touchStartKey2 = config->touchStartKey;
     if (config->touchSelectKey2.x < 0.0f) config->touchSelectKey2 = config->touchSelectKey;
     if (config->touchFastForwardKey2.x < 0.0f) config->touchFastForwardKey2 = config->touchFastForwardKey;

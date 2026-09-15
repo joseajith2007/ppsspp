@@ -968,7 +968,7 @@ static const ConfigSetting controlSettings[] = {
 #endif
 
 	ConfigSetting("ShowTouchControls", SETTING(g_Config, bShowTouchControls), &DefaultShowTouchControls, CfgFlag::PER_GAME),
-    ConfigSetting("TouchLayout", SETTING(g_Config.touchControlsLandscape, iTouchLayout), 0, CfgFlag::PER_GAME),
+    ConfigSetting("TouchLayout", &g_Config, &g_Config.touchControlsLandscape.iTouchLayout, 0, CfgFlag::PER_GAME),
 	
 	// ConfigSetting("KeyMapping", SETTING(g_Config, iMappingMap), 0),
 	ConfigSetting("Custom0Mapping", "Custom0Image", "Custom0Shape", "Custom0Toggle", "Custom0Repeat", SETTING_IDX(g_Config, CustomButton, 0), {0, 0, 0, false, false}, CfgFlag::PER_GAME),

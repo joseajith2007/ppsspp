@@ -83,7 +83,7 @@ void TouchControlVisibilityScreen::CreateDialogViews(UI::ViewGroup *parent) {
 
 	const DeviceOrientation orientation = GetDeviceOrientation();
 	TouchControlConfig &touch = g_Config.GetTouchControlsConfig(orientation);
-	const bool isLayout2 = (g_Config.touchControlsLandscape.iTouchLayout == 1);
+	const bool isLayout2 = (touch.iTouchLayout == 1);
 
 	ConfigTouchPos &activeLKey = isLayout2 ? touch.touchLKey2 : touch.touchLKey;
 	ConfigTouchPos &activeRKey = isLayout2 ? touch.touchRKey2 : touch.touchRKey;
@@ -176,7 +176,7 @@ void RightAnalogMappingScreen::CreateDialogViews(UI::ViewGroup *parent) {
 	auto mc = GetI18NCategory(I18NCat::MAPPABLECONTROLS);
 
 	TouchControlConfig &touch = g_Config.GetTouchControlsConfig(GetDeviceOrientation());
-	const bool isLayout2 = (g_Config.touchControlsLandscape.iTouchLayout == 1);
+	const bool isLayout2 = (touch.iTouchLayout == 1);
 	ConfigTouchPos &activeRightStick = isLayout2 ? touch.touchRightAnalogStick2 : touch.touchRightAnalogStick;
 
 	static const char *rightAnalogButton[] = { "None", "L", "R", "Square", "Triangle", "Circle", "Cross", "D-pad up", "D-pad down", "D-pad left", "D-pad right", "Start", "Select", "RightAn.Up", "RightAn.Down", "RightAn.Left", "RightAn.Right", "An.Up", "An.Down", "An.Left", "An.Right" };
