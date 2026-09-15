@@ -1093,7 +1093,7 @@ GamepadEmuView::GamepadEmuView(const TouchControlConfig &config, float xres, flo
 	}
 
 	// touchActionButtonCenter.show will always be true, since that's the default.
-	const TouchControlConfig &activeCfg = isLayout2 ? g_Config.GetTouchControlsConfig(g_display.GetDeviceOrientation()) : config;
+	const TouchControlConfig &activeCfg = config;
 	if (activeCfg.bShowTouchCircle)
 		addPSPButton(CTRL_CIRCLE, "Circle button", roundImage, ImageID("I_ROUND"), ImageID("I_CIRCLE"), activeActionButtonCenter, circleOffset);
 	if (activeCfg.bShowTouchCross)
