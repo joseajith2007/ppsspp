@@ -455,8 +455,8 @@ EmuScreen::~EmuScreen() {
 	Achievements::UnloadGame();
     if (coreState != CORE_POWERDOWN) {
     Core_Stop();
-    PSP_Shutdown(true);
     }
+    PSP_Shutdown(true);
     coreState = CORE_POWERDOWN;
 
     // If achievements are disabled in the global config, let's shut it down here.
@@ -507,9 +507,6 @@ void EmuScreen::dialogFinished(const Screen *dialog, DialogResult result) {
     // DR_YES means a message sent to PauseMenu by System_PostUIMessage.
     if ((result == DR_OK || quit_) && !bootPending_) {
     quit_ = false;
-    Core_Stop();
-    PSP_Shutdown(true);
-    coreState = CORE_POWERDOWN;
     screenManager()->switchScreen(new MainScreen());
     } else {
     RecreateViews();
