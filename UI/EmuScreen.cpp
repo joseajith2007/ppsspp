@@ -503,12 +503,11 @@ void EmuScreen::dialogFinished(const Screen *dialog, DialogResult result) {
 	// DR_CANCEL/DR_BACK means clicked on "continue", DR_OK means clicked on "back to menu",
 	// DR_YES means a message sent to PauseMenu by System_PostUIMessage.
 	if ((result == DR_OK || quit_) && !bootPending_) {
-		screenManager()->switchScreen(new MainScreen());
-		quit_ = false;
-	} else {
-		g_Config.Load();
-		RecreateViews();
-	}
+    screenManager()->switchScreen(new MainScreen());
+    quit_ = false;
+    } else {
+    RecreateViews();
+    }
 	
 	SetExtraAssertInfo(extraAssertInfoStr_.c_str());
 }
@@ -609,9 +608,11 @@ void EmuScreen::sendMessage(UIMessage message, const char *value) {
 			gamePath_ = newGamePath;
 		}
 	} else if (message == UIMessage::CONFIG_LOADED) {
-		// In case we need to position touch controls differently.
-		RecreateViews();
-	} else if (message == UIMessage::SHOW_CONTROL_MAPPING && screenManager()->topScreen() == this) {
+        // In case we need to position touch controls differently.
+        if (!bootPending_ && PSP_IsInited()) {
+        RecreateViews();
+        }
+    } else if (message == UIMessage::SHOW_CONTROL_MAPPING && screenManager()->topScreen() == this) {
 		UpdateUIState(UISTATE_PAUSEMENU);
 		screenManager()->push(new ControlMappingScreen(gamePath_));
 	} else if (message == UIMessage::SHOW_DISPLAY_LAYOUT_EDITOR && screenManager()->topScreen() == this) {
